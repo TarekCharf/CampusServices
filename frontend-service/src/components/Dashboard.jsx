@@ -1,117 +1,117 @@
 import React, { useState, useEffect } from 'react';
 
-// Chronologie exacte du Sprint 1 (J1 09h00 -> J1 11h00)
+// Chronologie réelle extraite du journal d'événements Jira (16 nov. 15h54 -> 16 nov. 17h46)
 const TIMELINE_EVENTS = [
   {
-    time: 'J1 09h00',
+    time: '16 Nov 15h54',
     minutesFromStart: 0,
-    eventTitle: 'Démarrage du Sprint 1',
-    description: 'CP-1 entre dans "En cours". Les autres cartes sont prêtes dans le backlog du sprint.',
-    decision: 'Respect de la capacité initiale (WIP = 1/2).',
+    eventTitle: 'Démarrage du Sprint 1 (Périmètre initial : 7 pts)',
+    description: 'CP-1 et CP-2 entrent dans "En cours" (WIP = 2/2). CP-7 attend dans "Prêt".',
+    decision: 'Respect strict de la capacité initiale (max 2 cartes En cours).',
+    totalCards: 3,
     cards: [
-      { id: 'CP-1', title: 'Déposer une demande (US01)', status: 'En cours', points: 3, startMin: 0, endMin: null },
-      { id: 'CP-7', title: 'Éviter demande invalide (US07)', status: 'Prêt', points: 2, startMin: null, endMin: null },
-      { id: 'CP-2', title: 'Consulter le suivi (US02)', status: 'Prêt', points: 2, startMin: null, endMin: null },
-      { id: 'CP-9', title: 'Interface Utilisateur React', status: 'Prêt', points: 3, startMin: null, endMin: null },
-      { id: 'CP-10', title: 'Dashboard Kanban Dynamique', status: 'Prêt', points: 2, startMin: null, endMin: null },
+      { id: 'CP-1', title: 'Déposer une demande', status: 'En cours', points: 3, startMin: 0, endMin: null },
+      { id: 'CP-2', title: 'Consulter le suivi', status: 'En cours', points: 2, startMin: 0, endMin: null },
+      { id: 'CP-7', title: 'Éviter une demande invalide', status: 'Prêt', points: 2, startMin: null, endMin: null },
     ]
   },
   {
-    time: 'J1 09h20',
-    minutesFromStart: 20,
-    eventTitle: 'CP-1 prêt pour vérification & lancement CP-7',
-    description: 'CP-1 passe dans "À vérifier" (1/1). CP-7 est tirée dans "En cours" (1/2).',
-    decision: 'Exécution du test d’acceptation TA01 sur CP-1.',
+    time: '16 Nov 16h55',
+    minutesFromStart: 61,
+    eventTitle: 'CP-1 passe en vérification (TA01)',
+    description: 'Développement de POST /api/demandes achevé. CP-1 entre dans "À vérifier" (1/1) et libère une place En cours.',
+    decision: 'Exécution du test TA01 sur CP-1 et tirage de CP-7 dans "En cours" (17h04).',
+    totalCards: 3,
     cards: [
-      { id: 'CP-1', title: 'Déposer une demande (US01)', status: 'À vérifier', points: 3, startMin: 0, endMin: null },
-      { id: 'CP-7', title: 'Éviter demande invalide (US07)', status: 'En cours', points: 2, startMin: 15, endMin: null },
-      { id: 'CP-2', title: 'Consulter le suivi (US02)', status: 'Prêt', points: 2, startMin: null, endMin: null },
-      { id: 'CP-9', title: 'Interface Utilisateur React', status: 'Prêt', points: 3, startMin: null, endMin: null },
-      { id: 'CP-10', title: 'Dashboard Kanban Dynamique', status: 'Prêt', points: 2, startMin: null, endMin: null },
+      { id: 'CP-1', title: 'Déposer une demande', status: 'À vérifier', points: 3, startMin: 0, endMin: null },
+      { id: 'CP-2', title: 'Consulter le suivi', status: 'En cours', points: 2, startMin: 0, endMin: null },
+      { id: 'CP-7', title: 'Éviter une demande invalide', status: 'Prêt', points: 2, startMin: null, endMin: null },
     ]
   },
   {
-    time: 'J1 09h35',
-    minutesFromStart: 35,
-    eventTitle: 'CP-1 Terminé & ajustement validateur CP-7',
-    description: 'TA01 validé (CP-1 Terminé en 25 min). CP-7 passe en vérification (1/1) après correction du validateur regex MAT-000.',
-    decision: 'Vérification TA02 lancée sur CP-7.',
+    time: '16 Nov 17h04',
+    minutesFromStart: 70,
+    eventTitle: 'CP-1 résolu (3 pts) & démarrage de CP-7',
+    description: 'TA01 validé : CP-1 passe dans "Terminé" (70 min). CP-7 entre immédiatement dans "En cours" (WIP = 2/2 avec CP-2).',
+    decision: 'Périmètre réalisé : 3 / 7 pts.',
+    totalCards: 3,
     cards: [
-      { id: 'CP-1', title: 'Déposer une demande (US01)', status: 'Terminé', points: 3, startMin: 0, endMin: 25 },
-      { id: 'CP-7', title: 'Éviter demande invalide (US07)', status: 'À vérifier', points: 2, startMin: 15, endMin: null },
-      { id: 'CP-2', title: 'Consulter le suivi (US02)', status: 'Prêt', points: 2, startMin: null, endMin: null },
-      { id: 'CP-9', title: 'Interface Utilisateur React', status: 'Prêt', points: 3, startMin: null, endMin: null },
-      { id: 'CP-10', title: 'Dashboard Kanban Dynamique', status: 'Prêt', points: 2, startMin: null, endMin: null },
+      { id: 'CP-1', title: 'Déposer une demande', status: 'Terminé', points: 3, startMin: 0, endMin: 70 },
+      { id: 'CP-2', title: 'Consulter le suivi', status: 'En cours', points: 2, startMin: 0, endMin: null },
+      { id: 'CP-7', title: 'Éviter une demande invalide', status: 'En cours', points: 2, startMin: 70, endMin: null },
     ]
   },
   {
-    time: 'J1 09h55',
-    minutesFromStart: 55,
-    eventTitle: 'CP-7 Terminé & CP-2 en vérification',
-    description: 'CP-7 est terminé (25 min). CP-2 a été développé et entre dans "À vérifier" (1/1).',
-    decision: 'Exécution de TA03 (recherche dossier existant + Z-999).',
+    time: '16 Nov 17h16',
+    minutesFromStart: 82,
+    eventTitle: 'CP-2 et CP-7 résolus (7 / 7 pts atteints)',
+    description: 'Tests TA02 et TA03 validés : CP-2 (82 min) et CP-7 (12 min) passent dans "Terminé".',
+    decision: 'Tout le périmètre backend initial est livré.',
+    totalCards: 3,
     cards: [
-      { id: 'CP-1', title: 'Déposer une demande (US01)', status: 'Terminé', points: 3, startMin: 0, endMin: 25 },
-      { id: 'CP-7', title: 'Éviter demande invalide (US07)', status: 'Terminé', points: 2, startMin: 15, endMin: 40 },
-      { id: 'CP-2', title: 'Consulter le suivi (US02)', status: 'À vérifier', points: 2, startMin: 40, endMin: null },
-      { id: 'CP-9', title: 'Interface Utilisateur React', status: 'Prêt', points: 3, startMin: null, endMin: null },
-      { id: 'CP-10', title: 'Dashboard Kanban Dynamique', status: 'Prêt', points: 2, startMin: null, endMin: null },
+      { id: 'CP-1', title: 'Déposer une demande', status: 'Terminé', points: 3, startMin: 0, endMin: 70 },
+      { id: 'CP-2', title: 'Consulter le suivi', status: 'Terminé', points: 2, startMin: 0, endMin: 82 },
+      { id: 'CP-7', title: 'Éviter une demande invalide', status: 'Terminé', points: 2, startMin: 70, endMin: 82 },
     ]
   },
   {
-    time: 'J1 10h25',
-    minutesFromStart: 85,
-    eventTitle: 'Parcours Backend terminé — Développement Frontend en parallèle',
-    description: 'Toutes les US métier sont terminées. CP-9 et CP-10 sont simultanément "En cours" (WIP max = 2/2 atteint).',
-    decision: 'Aucune nouvelle carte tirée tant qu’une place ne se libère.',
+    time: '16 Nov 17h17',
+    minutesFromStart: 83,
+    eventTitle: 'Ajout au sprint : CP-9 et CP-10 (Périmètre → 13 pts)',
+    description: 'Les tâches techniques UI React (CP-9, 3 pts) et Dashboard Kanban (CP-10, 3 pts) sont ajoutées et tirées "En cours" (WIP = 2/2).',
+    decision: 'Estimation mise à jour à 17h22 (+6 pts). Aucune autre carte tirée.',
+    totalCards: 5,
     cards: [
-      { id: 'CP-1', title: 'Déposer une demande (US01)', status: 'Terminé', points: 3, startMin: 0, endMin: 25 },
-      { id: 'CP-7', title: 'Éviter demande invalide (US07)', status: 'Terminé', points: 2, startMin: 15, endMin: 40 },
-      { id: 'CP-2', title: 'Consulter le suivi (US02)', status: 'Terminé', points: 2, startMin: 40, endMin: 60 },
-      { id: 'CP-9', title: 'Interface Utilisateur React', status: 'En cours', points: 3, startMin: 60, endMin: null },
-      { id: 'CP-10', title: 'Dashboard Kanban Dynamique', status: 'En cours', points: 2, startMin: 85, endMin: null },
+      { id: 'CP-1', title: 'Déposer une demande', status: 'Terminé', points: 3, startMin: 0, endMin: 70 },
+      { id: 'CP-2', title: 'Consulter le suivi', status: 'Terminé', points: 2, startMin: 0, endMin: 82 },
+      { id: 'CP-7', title: 'Éviter une demande invalide', status: 'Terminé', points: 2, startMin: 70, endMin: 82 },
+      { id: 'CP-9', title: 'Créer une interface utilisateur', status: 'En cours', points: 3, startMin: 83, endMin: null },
+      { id: 'CP-10', title: 'Intégrer un dashboard Kanban', status: 'En cours', points: 3, startMin: 83, endMin: null },
     ]
   },
   {
-    time: 'J1 10h35',
-    minutesFromStart: 95,
-    eventTitle: '⚠️ Règle WIP appliquée (Colonne "À vérifier" pleine)',
-    description: 'CP-9 passe dans "À vérifier" (1/1). CP-10 est prêt à être testé mais reste bloqué en "En cours" car la vérification est pleine.',
-    decision: 'Priorité donnée à la clôture de CP-9 avant de déplacer CP-10.',
+    time: '16 Nov 17h44',
+    minutesFromStart: 110,
+    eventTitle: '⚠️ Règle WIP appliquée (Colonne "À vérifier" pleine 1/1)',
+    description: 'CP-9 passe dans "À vérifier" (1/1). CP-10 est prêt à être vérifié mais patiente 1 min dans "En cours" pour respecter la limite WIP.',
+    decision: 'Clôturer TR01 (CP-9) avant de basculer CP-10 en vérification.',
+    totalCards: 5,
     cards: [
-      { id: 'CP-1', title: 'Déposer une demande (US01)', status: 'Terminé', points: 3, startMin: 0, endMin: 25 },
-      { id: 'CP-7', title: 'Éviter demande invalide (US07)', status: 'Terminé', points: 2, startMin: 15, endMin: 40 },
-      { id: 'CP-2', title: 'Consulter le suivi (US02)', status: 'Terminé', points: 2, startMin: 40, endMin: 60 },
-      { id: 'CP-9', title: 'Interface Utilisateur React', status: 'À vérifier', points: 3, startMin: 60, endMin: null },
-      { id: 'CP-10', title: 'Dashboard Kanban Dynamique', status: 'En cours', points: 2, startMin: 85, endMin: null, blocked: true },
+      { id: 'CP-1', title: 'Déposer une demande', status: 'Terminé', points: 3, startMin: 0, endMin: 70 },
+      { id: 'CP-2', title: 'Consulter le suivi', status: 'Terminé', points: 2, startMin: 0, endMin: 82 },
+      { id: 'CP-7', title: 'Éviter une demande invalide', status: 'Terminé', points: 2, startMin: 70, endMin: 82 },
+      { id: 'CP-9', title: 'Créer une interface utilisateur', status: 'À vérifier', points: 3, startMin: 83, endMin: null },
+      { id: 'CP-10', title: 'Intégrer un dashboard Kanban', status: 'En cours', points: 3, startMin: 83, endMin: null, blocked: true },
     ]
   },
   {
-    time: 'J1 10h40',
-    minutesFromStart: 100,
-    eventTitle: 'Déblocage du flux : CP-10 passe en vérification',
-    description: 'CP-9 est validé et passe dans "Terminé" (35 min). La place en vérification se libère pour CP-10 (1/1).',
-    decision: 'Vérification des métriques et de la timeline sur CP-10.',
+    time: '16 Nov 17h45',
+    minutesFromStart: 111,
+    eventTitle: 'CP-9 résolu (10 pts) & CP-10 en vérification',
+    description: 'CP-9 passe dans "Terminé" (28 min). CP-10 entre aussitôt dans "À vérifier" (1/1) pour exécution du test TR02.',
+    decision: 'Vérification finale du tableau Kanban.',
+    totalCards: 5,
     cards: [
-      { id: 'CP-1', title: 'Déposer une demande (US01)', status: 'Terminé', points: 3, startMin: 0, endMin: 25 },
-      { id: 'CP-7', title: 'Éviter demande invalide (US07)', status: 'Terminé', points: 2, startMin: 15, endMin: 40 },
-      { id: 'CP-2', title: 'Consulter le suivi (US02)', status: 'Terminé', points: 2, startMin: 40, endMin: 60 },
-      { id: 'CP-9', title: 'Interface Utilisateur React', status: 'Terminé', points: 3, startMin: 60, endMin: 95 },
-      { id: 'CP-10', title: 'Dashboard Kanban Dynamique', status: 'À vérifier', points: 2, startMin: 85, endMin: null },
+      { id: 'CP-1', title: 'Déposer une demande', status: 'Terminé', points: 3, startMin: 0, endMin: 70 },
+      { id: 'CP-2', title: 'Consulter le suivi', status: 'Terminé', points: 2, startMin: 0, endMin: 82 },
+      { id: 'CP-7', title: 'Éviter une demande invalide', status: 'Terminé', points: 2, startMin: 70, endMin: 82 },
+      { id: 'CP-9', title: 'Créer une interface utilisateur', status: 'Terminé', points: 3, startMin: 83, endMin: 111 },
+      { id: 'CP-10', title: 'Intégrer un dashboard Kanban', status: 'À vérifier', points: 3, startMin: 83, endMin: null },
     ]
   },
   {
-    time: 'J1 11h00',
-    minutesFromStart: 120,
-    eventTitle: '🏁 Clôture du Sprint 1 (Release v0.1)',
-    description: 'CP-10 est terminé (35 min). Toutes les cartes du sprint sont livrées et testées.',
-    decision: 'Incrément v0.1 prêt pour la Sprint Review.',
+    time: '16 Nov 17h46',
+    minutesFromStart: 112,
+    eventTitle: '🏁 Fin du Sprint 1 (Release v0.1) — 100 % des tickets livrés',
+    description: 'CP-10 passe dans "Terminé" (29 min). Toutes les cartes du sprint (5 tickets / 13 Story Points) sont achevées et testées.',
+    decision: 'Incrément v0.1 prêt pour la Sprint Review et tagué sur Git.',
+    totalCards: 5,
     cards: [
-      { id: 'CP-1', title: 'Déposer une demande (US01)', status: 'Terminé', points: 3, startMin: 0, endMin: 25 },
-      { id: 'CP-7', title: 'Éviter demande invalide (US07)', status: 'Terminé', points: 2, startMin: 15, endMin: 40 },
-      { id: 'CP-2', title: 'Consulter le suivi (US02)', status: 'Terminé', points: 2, startMin: 40, endMin: 60 },
-      { id: 'CP-9', title: 'Interface Utilisateur React', status: 'Terminé', points: 3, startMin: 60, endMin: 95 },
-      { id: 'CP-10', title: 'Dashboard Kanban Dynamique', status: 'Terminé', points: 2, startMin: 85, endMin: 120 },
+      { id: 'CP-1', title: 'Déposer une demande', status: 'Terminé', points: 3, startMin: 0, endMin: 70 },
+      { id: 'CP-2', title: 'Consulter le suivi', status: 'Terminé', points: 2, startMin: 0, endMin: 82 },
+      { id: 'CP-7', title: 'Éviter une demande invalide', status: 'Terminé', points: 2, startMin: 70, endMin: 82 },
+      { id: 'CP-9', title: 'Créer une interface utilisateur', status: 'Terminé', points: 3, startMin: 83, endMin: 111 },
+      { id: 'CP-10', title: 'Intégrer un dashboard Kanban', status: 'Terminé', points: 3, startMin: 83, endMin: 112 },
     ]
   }
 ];
@@ -123,23 +123,22 @@ const COLUMNS = [
   { name: 'Terminé', limit: null }
 ];
 
-// Utilitaire pour formater les minutes depuis 09h00 en heure lisible (ex: 25 -> "09h25")
+// Formate les minutes écoulées depuis le démarrage réel (16 Nov 15h54)
 const formatClock = (mins) => {
   if (mins === null) return '-';
-  const totalMins = 9 * 60 + mins;
+  const totalMins = 15 * 60 + 54 + mins;
   const h = String(Math.floor(totalMins / 60)).padStart(2, '0');
   const m = String(totalMins % 60).padStart(2, '0');
-  return `J1 ${h}h${m}`;
+  return `16 Nov ${h}h${m}`;
 };
 
 export default function Dashboard() {
-  const [stepIndex, setStepIndex] = useState(TIMELINE_EVENTS.length - 1); // Par défaut à la fin du sprint (11h00)
+  const [stepIndex, setStepIndex] = useState(TIMELINE_EVENTS.length - 1);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const currentSnapshot = TIMELINE_EVENTS[stepIndex];
   const cards = currentSnapshot.cards;
 
-  // Lecture automatique de l'historique du sprint
   useEffect(() => {
     if (!isPlaying) return;
     const timer = setInterval(() => {
@@ -150,14 +149,14 @@ export default function Dashboard() {
         }
         return prev + 1;
       });
-    }, 2000); // Avance toutes les 2 secondes
+    }, 2000);
 
     return () => clearInterval(timer);
   }, [isPlaying]);
 
   const handlePlayToggle = () => {
     if (!isPlaying && stepIndex === TIMELINE_EVENTS.length - 1) {
-      setStepIndex(0); // Redémarre depuis 09h00 si on était déjà à la fin
+      setStepIndex(0);
     }
     setIsPlaying(!isPlaying);
   };
@@ -170,7 +169,7 @@ export default function Dashboard() {
   const debitCount = completedCards.length;
 
   const avgCycleTime = completedCards.length
-    ? (completedCards.reduce((acc, c) => acc + (c.endMin - c.startMin), 0) / completedCards.length).toFixed(0)
+    ? Math.round(completedCards.reduce((acc, c) => acc + (c.endMin - c.startMin), 0) / completedCards.length)
     : 0;
 
   const maxAge = openCards.length
@@ -183,7 +182,7 @@ export default function Dashboard() {
       <div className="card" style={{ marginBottom: '1.5rem', padding: '1.25rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h2 style={{ marginBottom: '0.25rem' }}>Cycle du Sprint 1 — Simulation Chronologique</h2>
+            <h2 style={{ marginBottom: '0.25rem' }}>Cycle Réel du Sprint 1 — Simulation Chronologique</h2>
             <span className="badge" style={{ fontSize: '0.9rem' }}>🕒 Instant : {currentSnapshot.time}</span>
           </div>
 
@@ -217,13 +216,14 @@ export default function Dashboard() {
         </div>
 
         {/* Barre de progression des jalons horaires */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', gap: '4px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', gap: '4px', flexWrap: 'wrap' }}>
           {TIMELINE_EVENTS.map((ev, idx) => (
             <button
               key={ev.time}
               onClick={() => { setIsPlaying(false); setStepIndex(idx); }}
               style={{
                 flex: 1,
+                minWidth: '75px',
                 padding: '0.4rem 0.2rem',
                 fontSize: '0.75rem',
                 fontWeight: idx === stepIndex ? '700' : '400',
@@ -234,7 +234,7 @@ export default function Dashboard() {
                 cursor: 'pointer'
               }}
             >
-              {ev.time.replace('J1 ', '')}
+              {ev.time.replace('16 Nov ', '')}
             </button>
           ))}
         </div>
@@ -244,8 +244,8 @@ export default function Dashboard() {
           marginTop: '1rem',
           padding: '0.85rem',
           borderRadius: '6px',
-          background: currentSnapshot.time === 'J1 10h35' ? '#fef3c7' : '#f1f5f9',
-          borderLeft: `4px solid ${currentSnapshot.time === 'J1 10h35' ? '#d97706' : 'var(--primary)'}`
+          background: currentSnapshot.time === '16 Nov 17h44' ? '#fef3c7' : '#f1f5f9',
+          borderLeft: `4px solid ${currentSnapshot.time === '16 Nov 17h44' ? '#d97706' : 'var(--primary)'}`
         }}>
           <strong>{currentSnapshot.eventTitle} :</strong> {currentSnapshot.description}
           <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
@@ -262,7 +262,7 @@ export default function Dashboard() {
         </div>
         <div className="metric-box">
           <div>Débit (Terminées)</div>
-          <div className="metric-value">{debitCount} / 5</div>
+          <div className="metric-value">{debitCount} / {currentSnapshot.totalCards}</div>
         </div>
         <div className="metric-box">
           <div>Temps de cycle moyen</div>
