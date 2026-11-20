@@ -31,7 +31,7 @@ class DemandeCreate(BaseModel):
         if not v:
             raise ValueError("Le type de demande est obligatoire.")
         if v not in TypeDemande:
-            raise ValueError("Le type de demande est invalide.")
+            raise ValueError("Le type de demande est invalide(Scolarité ou Réussite).")
         return v
 
 # Modèle de réponse complet (représentant l'entité Demande)
@@ -40,4 +40,10 @@ class DemandeResponse(BaseModel):
     etudiant_num: str
     type_demande: TypeDemande
     etat: EtatDemande
+    motif_refus: str | None = None
     date_derniere_modification: str
+
+# Modèle traitement demande
+class DemandeUpdate(BaseModel):
+    etat: EtatDemande
+    motif_refus: str | None = None

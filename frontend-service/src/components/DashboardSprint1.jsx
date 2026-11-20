@@ -132,7 +132,7 @@ const formatClock = (mins) => {
   return `16 Nov ${h}h${m}`;
 };
 
-export default function Dashboard() {
+export default function DashboardSprint1() {
   const [stepIndex, setStepIndex] = useState(TIMELINE_EVENTS.length - 1);
   const [isPlaying, setIsPlaying] = useState(false);
 
