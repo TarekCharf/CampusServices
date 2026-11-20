@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import demandeService from '../services/demandeService';
 import { FormError } from './shared/FormError';
 import { applyApiErrors } from '../utils/apiErrors';
+import { BADGE_CLASSES } from '../utils/badgeClasses';
 
 export default function GetDemande() {
   const [numero, setNumero] = useState('');
@@ -62,7 +63,13 @@ export default function GetDemande() {
           <h3>Détails du dossier {demande.num}</h3>
           <p><strong>Étudiant :</strong> {demande.etudiant_num}</p>
           <p><strong>Type :</strong> {demande.type_demande}</p>
-          <p><strong>État actuel :</strong> <span className="badge">{demande.etat}</span></p>
+          <p>
+            <strong>État actuel :</strong>{" "}
+            <span className={BADGE_CLASSES[demande.etat] || "badge"}>
+              {demande.etat}
+            </span>
+          </p>
+          {demande.motif_refus && <p><strong>Motif du refus :</strong> {demande.motif_refus}</p>}
           <p><strong>Dernière modification :</strong> {demande.date_derniere_modification}</p>
         </div>
       )}

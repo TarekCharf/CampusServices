@@ -5,6 +5,8 @@ import demandeService from '../../services/demandeService';
 
 export default function Navbar() {
   const [jiraOpen, setJiraOpen] = useState(false);
+  const [etudiantOpen, setEtudiantOpen] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState(false);
   const [loadingReset, setLoadingReset] = useState(false);
 
   const handleReset = async () => {
@@ -29,12 +31,43 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <Link to="/" className="navbar-brand">CampusServices v0.1</Link>
+      <Link to="/" className="navbar-brand">CampusServices v0.2</Link>
       <ul className="nav-links">
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/dashboard">Dashboard Kanban</Link></li>
-        <li><Link to="/creer-demande">Déposer demande</Link></li>
-        <li><Link to="/suivi-demande">Suivre demande</Link></li>
+
+        <li 
+          className="dropdown" 
+          onMouseEnter={() => setDashboardOpen(true)} 
+          onMouseLeave={() => setDashboardOpen(false)}
+        >
+          <button className="dropdown-btn" onClick={() => setDashboardOpen(!dashboardOpen)}>
+            Dashboard Kanban ▾
+          </button>
+          {dashboardOpen && (
+            <div className="dropdown-menu">
+              <Link to="/dashboardSprint1">Sprint 1</Link>
+              <Link to="/dashboardSprint2">Sprint 2</Link>
+            </div>
+          )}
+        </li>
+
+        <li 
+          className="dropdown" 
+          onMouseEnter={() => setEtudiantOpen(true)} 
+          onMouseLeave={() => setEtudiantOpen(false)}
+        >
+          <button className="dropdown-btn" onClick={() => setEtudiantOpen(!etudiantOpen)}>
+            Espace Étudiants ▾
+          </button>
+          {etudiantOpen && (
+            <div className="dropdown-menu">
+              <Link to="/creer-demande">Déposer demande</Link>
+              <Link to="/suivi-demande">Suivre demande</Link>
+            </div>
+          )}
+        </li>
+
+        <li><Link to="/liste-demande">Espace Agent</Link></li>
         
         <li 
           className="dropdown" 

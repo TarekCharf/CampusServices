@@ -159,6 +159,20 @@ h1, h2, h3 {
   font-size: 0.85rem;
 }
 
+.btn-disabled {
+  background-color: var(--border);
+  color: var(--text-light);
+  cursor: not-allowed;
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-disabled:hover {
+  background-color: #fee2e2;
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
 /* Alertes et Badges */
 .alert {
   padding: 1rem;
@@ -176,6 +190,18 @@ h1, h2, h3 {
   font-weight: 600;
   background: #e0e7ff;
   color: var(--primary);
+}
+.badge-entraitement{
+  background: #fef3c7;
+  color: var(--warning);
+}
+.badge-refusee{
+  background: #fee2e2;
+  color: var(--danger);
+}
+.badge-validee{
+  background: #dcfce7;
+  color: var(--success);
 }
 
 /* Kanban Board */
@@ -248,4 +274,85 @@ h1, h2, h3 {
   display: flex;
   justify-content: space-between;
   margin-top: 0.75rem;
+}
+
+/* Modal de refus */
+.modal-dialog {
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-card);
+  color: var(--text-dark);
+  width: 92%;
+  max-width: 460px;
+  box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.2);
+}
+
+.modal-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.modal-body {
+  padding: 1.5rem 1.75rem;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.modal-header h2 {
+  margin-bottom: 0;
+  font-size: 1.2rem;
+  color: var(--danger);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.modal-close:hover {
+  background: #f1f5f9;
+  color: var(--text-dark);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #b91c1c;
+}
+
+.btn-secondary {
+  background-color: #f1f5f9;
+  color: var(--text-dark);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background-color: #e2e8f0;
 }
