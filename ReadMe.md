@@ -1,14 +1,34 @@
-# CampusServices - Gestion des demandes d'attestation (Version v0.1 - Sprint 1)
+# CampusServices - Gestion des demandes d'attestation (Version v0.2 - Sprint 2)
 
 Service web de dépôt et de suivi des demandes d'attestation développé dans le cadre du module **Développement Agile (Scrum & Kanban)**.
 
-## 1. Objectif de la version v0.1 (Sprint 1)
-Permettre à un **étudiant** de :
-* **CP-1 (US01) :** Déposer une demande d'attestation (types *Scolarité* ou *Réussite*) avec un identifiant fictif au format `MAT-000` et recevoir un numéro unique avec l'état initial « Reçue ».
-* **CP-7 (US07) :** Éviter l'enregistrement d'une demande invalide (champ obligatoire manquant, format d'identifiant incorrect ou type d'attestation non admis).
-* **CP-2 (US02) :** Consulter le suivi d'une demande à partir de son numéro unique (ou afficher un message d'erreur clair si le numéro est introuvable).
-* **CP-9 (CP-9) :** Fournir une interface utilisateur React modulaire avec navigation fluide (formulaires, documentation API intégrée, raccourcis Jira) et bouton de réinitialisation rapide.
-* **CP-10 (CP-10) :** Intégrer un Dashboard Kanban dynamique simulant le cycle chronologique du Sprint 1 (respect des limites WIP et calcul temps réel des 4 métriques : WIP, Débit, Temps de cycle, Âge).
+## 1. Objectif de la version v0.2 (Sprint 2)
+
+Cette version finalise l'ensemble des besoins fonctionnels du produit en couvrant les **parcours Étudiant et Agent** avec persistance locale des données[cite: 17, 20] :
+
+### Parcours Étudiant (`/api/etudiant`)
+* **CP-1 (US01) :** Déposer une demande d'attestation (types *Scolarité* ou *Réussite*) avec un identifiant fictif au format `MAT-000` et recevoir un numéro unique avec l'état initial « Reçue »[cite: 2, 18].
+* **CP-7 (US07) :** Éviter l'enregistrement d'une demande invalide (champ obligatoire manquant, format d'identifiant incorrect ou type d'attestation non admis)[cite: 2, 18].
+* **CP-2 (US02) :** Consulter le suivi d'une demande à partir de son numéro unique (ou afficher un message d'erreur clair « Demande introuvable » si le numéro est inconnu)[cite: 3, 18].
+* **CP-11 *(Retour Sprint Review 1)* :** Visualiser le **motif exact du refus** directement sur la page de suivi étudiant lorsqu'une demande est refusée par un agent[cite: 6, 22].
+
+### Parcours Agent & Persistance (`/api/agent`)
+* **CP-3 (US03) :** Consulter la liste globale des demandes enregistrées (numéro, identifiant étudiant, type, état, date de modification)[cite: 3, 18].
+* **CP-4 (US04) :** Faire évoluer l'état d'une demande selon le cycle de vie autorisé (`Reçue` $\rightarrow$ `En traitement` $\rightarrow$ `Validée` ou `Refusée`) et verrouiller toute transition sur les états finaux[cite: 4, 18, 19].
+* **CP-5 (US05) :** Documenter chaque décision avec horodatage et exiger un **motif non vide** en cas de refus[cite: 4, 5, 18, 19].
+* **CP-6 (US06) :** Filtrer la liste des demandes par état (`Reçue`, `En traitement`, `Validée`, `Refusée`)[cite: 5, 19].
+* **CP-8 (US08) :** Assurer la persistance durable des demandes et de leurs modifications sur base de données locale **SQLite** (`campus_services.db`)[cite: 4, 19].
+
+### Interface & Pilotage Agile
+* **CP-9 & CP-12 :** Interface React modulaire intégrant les vues Étudiant, l'espace Agent (liste filtrable, traitement et modale de refus), la documentation API v0.2 et la réinitialisation rapide.
+* **CP-10 & CP-13 :** Dashboards Kanban dynamiques simulant le cycle chronologique réel des **Sprints 1 et 2** (respect des limites WIP et calcul temps réel des 4 métriques : WIP, Débit, Temps de cycle, Âge)[cite: 14, 15, 21].
+
+---
+
+## 2. Pile technique et stockage
+* **Backend :** Python 3 / FastAPI (architecture modulaire avec routeurs préfixés `/api/etudiant` et `/api/agent`, validation stricte via Pydantic).
+* **Frontend :** React + Vite (JavaScript, routage via `react-router-dom`, feuille de style CSS native unifiée).
+* **Mode de stockage (v0.2) :** Base de données relationnelle locale **SQLite** (`backend/campus_services.db`) garantissant la conservation des données après rechargement du navigateur ou redémarrage du serveur.
 
 ---
 
@@ -83,14 +103,19 @@ Conformément aux spécifications de test du cahier des charges, l'application d
 Pour remettre l'application à son état initial (avec uniquement `D-101`, `D-102` et `D-103`) avant d'exécuter une nouvelle campagne de tests :
 1. **Via l'interface web (Recommandé) :** Cliquez directement sur le bouton 🔄 Réinitialiser dans la barre de navigation. Cette action appelle l'endpoint POST /api/reset côté backend et vide automatiquement le LocalStorage du navigateur.
 
-2. **Manuellement :** Redémarrez le serveur Uvicorn (`uvicorn main:app --reload`) et videz le LocalStorage depuis les outils de développement du navigateur ( `F12` > *Application* > *Local Storage* > *Clear*).
+2. **Via Swagger UI / cURL :** Envoyez une requête POST http://127.0.0.1:8000/api/reset.
 
 ---
 
 ## 5. Tests d'acceptation couverts dans cette version
-Cette version `v0.1` permet d'exécuter et de valider les trois premiers scénarios de test du cahier des charges :
+Cette version `v0.2` valide l'intégralité des 8 tests d'acceptation (TA01 à TA08) et des vérifications techniques (TR01 à TR04) du cahier des charges :
+
 * **TA01 (US01) :** Création d'une demande valide pour `MAT-001` (Scolarité) $\rightarrow$ Attribution d'un numéro unique (`D-104`) et état `Reçue`.
 * **TA02 (US07) :** Tentatives de soumission sans identifiant ou avec un type invalide $\rightarrow$ Rejet par validation et stabilité du nombre de demandes.
-* **TA03 (US02) :** Recherche du numéro créé (`D-104`) puis d'un numéro inconnu (`Z-999`) $\rightarrow$ Affichage de l'état exact pour `D-104` et du message *« Demande introuvable »* pour `Z-999`.
-* **TR01 (CP-9) :** Vérification du routage React, des liens externes (Jira, Swagger UI) et de la réinitialisation complète (POST /api/reset + purge LocalStorage).
-* **TR02 (CP-10) :** Validation de la simulation chronologique du Dashboard Kanban (J1 09h00 à 11h00), du respect de la limite WIP à 10h35 et du relevé final des 4 métriques (WIP = 0, Débit = 5/5, Cycle moyen = 27 min, Âge max = 0 min).
+* **TA03 (US02) :** Recherche du numéro créé (`D-104`) puis d'un numéro inconnu (`Z-999`) $\rightarrow$ Affichage de l'état exact pour `D-104` et du message **Demande introuvable** pour `Z-999`.
+* **TA04 (CP-3 & CP-4 / US03–US04) :** Consultation de la liste agent, prise en charge de D-104 (En traitement) puis validation `Validée`.   
+* **TA05 (CP-4, CP-5 & CP-11 / US04–US05) :** Prise en charge de D-102, rejet d'un refus sans motif, puis enregistrement d'un refus avec le motif `Pièce manquante` et vérification de son affichage côté suivi étudiant.   
+* **TA06 (CP-6 / US06) :** Activation du filtre `Reçue` après TA01 à TA05 $\rightarrow$ Affichage exclusif de `D-101`.   
+* **TA07 (CP-8 / US08) :** Rechargement du navigateur (`F5`) et redémarrage du serveur FastAPI $\rightarrow$ Conservation intégrale des dossiers, statuts et motifs enregistrés dans campus_services.db.   
+* **TA08 (CP-4 / US04) :** Verrouillage des transitions sur un état final (`Validée` ou `Refusée`) dans l'interface React et rejet côté API (`HTTP 400`).   
+* **TR01 – TR04 (CP-9, CP-10, CP-12, CP-13) :** Validation de l'interface React `v0.2`, de la documentation API intégrée et de la simulation chronologique des Dashboards Kanban des Sprints 1 et 2.
